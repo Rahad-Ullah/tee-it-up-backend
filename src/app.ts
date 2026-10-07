@@ -39,19 +39,7 @@ app.use(
     crossOriginResourcePolicy: { policy: 'cross-origin' },
   })
 );
-app.use(
-  cors({
-    origin: [
-      env.CLIENT_WEBSITE_URL,
-      env.CLIENT_DASHBOARD_URL,
-      "http://localhost:3000",
-      "http://localhost:3001",
-      "https://sabbir3000.naimulhassan.me",
-      "https://sabbir3001.naimulhassan.me"
-    ],
-    credentials: true,
-  })
-);
+app.use(cors());
 app.use(compression());
 app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev', { stream: morganStream }));
 
