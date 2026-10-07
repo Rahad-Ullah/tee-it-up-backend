@@ -39,7 +39,15 @@ app.use(
     crossOriginResourcePolicy: { policy: 'cross-origin' },
   })
 );
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://teeitupgolf.com.au',
+    'https://www.teeitupgolf.com.au',
+    'https://dashboard.teeitupgolf.com.au',
+    'http://localhost:3000'
+  ],
+  credentials: true
+}));
 app.use(compression());
 app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev', { stream: morganStream }));
 
