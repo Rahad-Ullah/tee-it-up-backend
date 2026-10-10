@@ -376,7 +376,6 @@ export const deleteCourseById = async (adminId: string, courseId: string): Promi
   if (!course) throw new AppError(404, 'Course not found');
 
   course.isDeleted = true;
-  course.deletedBy = adminId as any;
   await course.save();
 
   await recordAuditLog(adminId, 'COURSE_DELETED', 'Course', String(course._id));
