@@ -47,3 +47,13 @@ export const getPublicTeeTimes = catchAsync(async (req: Request, res: Response) 
   const teeTimes = await courseService.getPublicTeeTimes(req.params.slug, req.query.date as string);
   sendResponse(res, { statusCode: 200, message: 'Tee times retrieved successfully', data: teeTimes });
 });
+
+export const getCourseByIdAdmin = catchAsync(async (req: Request, res: Response) => {
+  const course = await courseService.getCourseByIdAdmin(req.params.id);
+  sendResponse(res, { statusCode: 200, message: 'Course retrieved successfully', data: course });
+});
+
+export const updateCourseById = catchAsync(async (req: Request, res: Response) => {
+  const course = await courseService.updateCourseById(req.user!.userId, req.params.id, req.body);
+  sendResponse(res, { statusCode: 200, message: 'Course updated successfully', data: course });
+});

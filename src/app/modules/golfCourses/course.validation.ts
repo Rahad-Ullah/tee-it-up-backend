@@ -50,11 +50,11 @@ const holeVideoSchema = z.object({
 export const updateMyCourseSchema = z.object({
   name: z.string().min(2).max(120).optional(),
   location: z.string().min(1).optional(),
-  summary: z.string().min(1).max(300).optional(),
-  description: z.string().min(1).max(4000).optional(),
+  summary: z.string().max(300).optional().or(z.literal('')),
+  description: z.string().max(4000).optional().or(z.literal('')),
   heroImage: z.string().min(1).optional(),
   stats: statsSchema.optional(),
-  sellingPoints: z.array(sellingPointSchema).min(1).max(6).optional(),
+  sellingPoints: z.array(sellingPointSchema).max(6).optional(),
   facilities: z.array(facilitySchema).max(12).optional(),
   signatureHole: signatureHoleSchema.optional(),
   gallery: z.array(z.string().min(1)).max(20).optional(),
@@ -93,4 +93,9 @@ export const adminListCoursesQuerySchema = z.object({
 
 export const getPublicTeeTimesQuerySchema = z.object({
   date: z.string().optional(),
+});
+
+export const updateCourseAdminSchema = updateMyCourseSchema.extend({
+  status: z.enum(['ACTIVE', 'PENDING', 'SUSPENDED']).optional(),
+  isFeatured: z.boolean().optional(),
 });

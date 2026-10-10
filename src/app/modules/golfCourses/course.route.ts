@@ -12,6 +12,7 @@ import {
   createCourseSchema,
   listCoursesQuerySchema,
   updateMyCourseSchema,
+  updateCourseAdminSchema,
   getPublicTeeTimesQuerySchema,
 } from './course.validation';
 
@@ -34,6 +35,22 @@ router.post(
   requireRole(ROLE.ADMIN, ROLE.SUPER_ADMIN),
   validateRequest({ body: createCourseSchema }),
   courseController.createCourse
+);
+
+router.get(
+  '/admin/:id',
+  auth,
+  requireRole(ROLE.ADMIN, ROLE.SUPER_ADMIN),
+  validateRequest({ params: courseIdParamSchema }),
+  courseController.getCourseByIdAdmin
+);
+
+router.patch(
+  '/:id',
+  auth,
+  requireRole(ROLE.ADMIN, ROLE.SUPER_ADMIN),
+  validateRequest({ params: courseIdParamSchema, body: updateCourseAdminSchema }),
+  courseController.updateCourseById
 );
 
 router.patch(

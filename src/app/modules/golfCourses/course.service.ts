@@ -229,7 +229,8 @@ export const adminListCourses = async (filters: AdminListCoursesFilters) => {
       .limit(limit)
       .populate('owner', 'fullName email')
       .populate('heroImage')
-      .populate('signatureHole.image'),
+        .populate('gallery')
+        .populate('signatureHole.image'),
     Course.countDocuments(whereClause),
   ]);
 
@@ -254,7 +255,9 @@ export const adminListCourses = async (filters: AdminListCoursesFilters) => {
     signatureHole: course.signatureHole,
     sellingPoints: course.sellingPoints,
     facilities: course.facilities,
-  }));
+      gallery: course.gallery,
+      holeVideos: course.holeVideos,
+    }));
 
   return { courses: rows, meta: buildMeta(page, limit, total) };
 };
@@ -337,4 +340,33 @@ export const getPublicTeeTimes = async (slug: string, dateStr?: string) => {
     .sort({ date: 1, startTime: 1 });
 
   return teeTimes;
+};
+
+export const getCourseByIdAdmin = async (courseId: string): Promise<ICourse> => {
+  const course = await Course.findById(courseId)
+    .populate('owner', 'fullName email')
+    .populate('heroImage')
+    .populate('gallery')
+    .populate('signatureHole.image');
+  if (!course) throw new AppError(404, 'Course not found');
+  return course;
+};
+
+export const updateCourseById = async (
+  adminId: string,
+  courseId: string,
+  payload: Partial<ICourse>
+): Promise<ICourse> => {
+  const course = await Course.findByIdAndUpdate(
+    courseId,
+    { ...payload, updatedBy: adminId as any },
+    { new: true, runValidators: true }
+  )
+    .populate('owner', 'fullName email')
+    .populate('heroImage')
+    .populate('gallery')
+    .populate('signatureHole.image');
+  if (!course) throw new AppError(404, 'Course not found');
+  await recordAuditLog(adminId, 'COURSE_UPDATED', 'Course', String(course._id));
+  return course;
 };
