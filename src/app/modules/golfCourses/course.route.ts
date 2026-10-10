@@ -53,6 +53,14 @@ router.patch(
   courseController.updateCourseById
 );
 
+router.delete(
+  '/:id',
+  auth,
+  requireRole(ROLE.ADMIN, ROLE.SUPER_ADMIN),
+  validateRequest({ params: courseIdParamSchema }),
+  courseController.deleteCourseById
+);
+
 router.patch(
   '/:id/approve',
   auth,

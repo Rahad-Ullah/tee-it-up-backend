@@ -57,3 +57,8 @@ export const updateCourseById = catchAsync(async (req: Request, res: Response) =
   const course = await courseService.updateCourseById(req.user!.userId, req.params.id, req.body);
   sendResponse(res, { statusCode: 200, message: 'Course updated successfully', data: course });
 });
+
+export const deleteCourseById = catchAsync(async (req: Request, res: Response) => {
+  await courseService.deleteCourseById(req.user!.userId, req.params.id);
+  sendResponse(res, { statusCode: 200, message: 'Club deleted successfully', data: null });
+});

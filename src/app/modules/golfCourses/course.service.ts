@@ -370,3 +370,14 @@ export const updateCourseById = async (
   await recordAuditLog(adminId, 'COURSE_UPDATED', 'Course', String(course._id));
   return course;
 };
+
+export const deleteCourseById = async (adminId: string, courseId: string): Promise<void> => {
+  const course = await Course.findById(courseId);
+  if (!course) throw new AppError(404, 'Course not found');
+
+  course.isDeleted = true;
+  course.deletedBy = adminId as any;
+  await course.save();
+
+  await recordAuditLog(adminId, 'COURSE_DELETED', 'Course', String(course._id));
+};
