@@ -11,22 +11,27 @@ interface UploadMediaInput {
 }
 
 export const uploadMedia = async (file: IUploadedFile, payload: UploadMediaInput): Promise<IMedia> => {
-  const provider = getMediaProvider();
-  const result = await provider.upload(file);
+  try {
+    const provider = getMediaProvider();
+    const result = await provider.upload(file);
 
-  return Media.create({
-    url: result.url,
-    publicId: result.publicId,
-    provider: result.provider,
-    type: payload.type,
-    relatedTo: payload.relatedTo,
-    relatedModel: payload.relatedModel,
-    mimeType: file.mimeType,
-    sizeBytes: file.sizeBytes,
-    width: result.width,
-    height: result.height,
-    uploadedBy: payload.uploadedBy,
-  });
+    return await Media.create({
+      url: result.url,
+      publicId: result.publicId,
+      provider: result.provider,
+      type: payload.type,
+      relatedTo: payload.relatedTo,
+      relatedModel: payload.relatedModel,
+      mimeType: file.mimeType,
+      sizeBytes: file.sizeBytes,
+      width: result.width,
+      height: result.height,
+      uploadedBy: payload.uploadedBy,
+    });
+  } catch (error) {
+    console.error('--- UPLOAD ERROR TRACE ---', error);
+    throw error;
+  }
 };
 
 export const deleteMedia = async (mediaId: string): Promise<void> => {
